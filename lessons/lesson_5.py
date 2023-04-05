@@ -1,18 +1,25 @@
+empty_dot = "●"
+row_1 = "1"
+row_2 = "2"
+row_3 = "3"
+col_A = "a"
+col_B = "b"
+col_C = "c"
 game_field = {
-    "1": {
-        "a": "●",
-        "b": "●",
-        "c": "●"
+    row_1: {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
     },
-    "2": {
-        "a": "●",
-        "b": "●",
-        "c": "●"
+    row_2: {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
     },
-    "3": {
-        "a": "●",
-        "b": "●",
-        "c": "●"
+    row_3: {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
     }
 }
 
@@ -22,7 +29,7 @@ def check_win():
 
 
 def check_empty(row, column):
-    if game_field[row][column] == "●":
+    if game_field[row][column] == empty_dot:
         return True
     else:
         print("Выбранная ячейка занята, повторите ввод")
@@ -30,7 +37,8 @@ def check_empty(row, column):
 
 
 def check_symbol(value):
-    if value == "X" or value == "O":
+    allow_symbol = ["X", "O"]
+    if value in allow_symbol:
         return True
     else:
         print("Выбран неверный символ, повторите ввод")
@@ -38,7 +46,8 @@ def check_symbol(value):
 
 
 def check_row(row):
-    if row == "1" or row == "2" or row == "3":
+    allow_row = [row_1, row_2, row_3]
+    if row in allow_row:
         return True
     else:
         print("Такой строки нет, повторите ввод")
@@ -46,7 +55,8 @@ def check_row(row):
 
 
 def check_column(column):
-    if column == "a" or column == "b" or column == "c":
+    allow_column = [col_A, col_B, col_C]
+    if column in allow_column:
         return True
     else:
         print("Такой колонки нет, повторите ввод")
@@ -56,8 +66,8 @@ def check_column(column):
 def check_input(dot_input):
     if len(dot_input) == 4 and dot_input[2] == "-":
         column = dot_input.split("-")[0][1]
-        row = dot_input.split("-")[0][0]
-        value = dot_input.split("-")[1]
+        row = dot_input.split("-")[0][0].lower()
+        value = dot_input.split("-")[1].upper()
 
         if check_row(row) and check_column(column) and check_symbol(value) and check_empty(row, column):
             return [row, column, value]
@@ -82,7 +92,7 @@ def input_dot_turn(dot_input):
 def print_game_field():
     print(f"\t\ta\t\tb\t\tc\n")
     for key, value in game_field.items():
-        print(f"{key}\t\t{value['a']}\t\t{value['b']}\t\t{value['c']}\n")
+        print(f"{key}\t\t{value[col_A]}\t\t{value[col_B]}\t\t{value[col_C]}\n")
     print("\n")
 
 
