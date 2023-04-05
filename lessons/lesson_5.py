@@ -5,6 +5,7 @@ row_3 = "3"
 col_A = "a"
 col_B = "b"
 col_C = "c"
+
 game_field = {
     row_1: {
         col_A: empty_dot,
@@ -25,24 +26,60 @@ game_field = {
 
 
 def check_win():
-    pass
+    # Проверка по строкам
+    if (game_field[row_1][col_A] == game_field[row_1][col_B]) and (
+            game_field[row_1][col_A] == game_field[row_1][col_C]) and (game_field[row_1][col_A] != empty_dot):
+        print(f"Победили {game_field[row_1][col_A]}")
+        return False
+    elif (game_field[row_2][col_A] == game_field[row_2][col_B]) and (
+            game_field[row_2][col_A] == game_field[row_2][col_C]) and (game_field[row_2][col_A] != empty_dot):
+        print(f"Победили {game_field[row_2][col_A]}")
+        return False
+    elif (game_field[row_3][col_A] == game_field[row_3][col_B]) and (
+            game_field[row_3][col_A] == game_field[row_3][col_C]) and (game_field[row_3][col_A] != empty_dot):
+        print(f"Победили {game_field[row_3][col_A]}")
+        return False
+    # Проверка по столбцам
+    elif (game_field[row_1][col_A] == game_field[row_2][col_A]) and (
+            game_field[row_1][col_A] == game_field[row_3][col_A]) and (game_field[row_1][col_A] != empty_dot):
+        print(f"Победили {game_field[row_1][col_A]}")
+        return False
+    elif (game_field[row_1][col_B] == game_field[row_2][col_B]) and (
+            game_field[row_1][col_B] == game_field[row_3][col_B]) and (game_field[row_1][col_B] != empty_dot):
+        print(f"Победили {game_field[row_1][col_B]}")
+        return False
+    elif (game_field[row_1][col_C] == game_field[row_2][col_C]) and (
+            game_field[row_1][col_C] == game_field[row_3][col_C]) and (game_field[row_1][col_C] != empty_dot):
+        print(f"Победили {game_field[row_1][col_C]}")
+        return False
+    # Проверка по диагоналям
+    elif (game_field[row_1][col_A] == game_field[row_2][col_B]) and (
+            game_field[row_1][col_A] == game_field[row_3][col_C]) and (game_field[row_1][col_A] != empty_dot):
+        print(f"Победили {game_field[row_1][col_A]}")
+        return False
+    elif (game_field[row_3][col_A] == game_field[row_2][col_B]) and (
+            game_field[row_3][col_A] == game_field[row_1][col_C]) and (game_field[row_3][col_A] != empty_dot):
+        print(f"Победили {game_field[row_3][col_A]}")
+        return False
+    else:
+        return True
 
 
 def check_empty(row, column):
     if game_field[row][column] == empty_dot:
         return True
     else:
-        print("Выбранная ячейка занята, повторите ввод")
+        print(f"Выбранная ячейка {game_field[row][column]} занята, повторите ввод")
         return False
 
 
-def check_symbol(value):
-    allow_symbol = ["X", "O"]
-    if value in allow_symbol:
-        return True
-    else:
-        print("Выбран неверный символ, повторите ввод")
-        return False
+# def check_symbol(value):
+#     allow_symbol = ["X", "O"]
+#     if value in allow_symbol:
+#         return True
+#     else:
+#         print(f"Выбран неверный символ: {value}, допустимые символы {allow_symbol} повторите ввод")
+#         return False
 
 
 def check_row(row):
@@ -50,7 +87,7 @@ def check_row(row):
     if row in allow_row:
         return True
     else:
-        print("Такой строки нет, повторите ввод")
+        print(f"Строки {row} нет, допустимые строки {allow_row}, повторите ввод")
         return False
 
 
@@ -59,32 +96,31 @@ def check_column(column):
     if column in allow_column:
         return True
     else:
-        print("Такой колонки нет, повторите ввод")
+        print(f"Колонки {column} нет, допустимые колонки {column}, повторите ввод")
         return False
 
 
 def check_input(dot_input):
-    if len(dot_input) == 4 and dot_input[2] == "-":
-        column = dot_input.split("-")[0][1]
-        row = dot_input.split("-")[0][0].lower()
-        value = dot_input.split("-")[1].upper()
+    if len(dot_input) == 2:
+        column = dot_input[1]
+        row = dot_input[0].lower()
 
-        if check_row(row) and check_column(column) and check_symbol(value) and check_empty(row, column):
-            return [row, column, value]
+        if check_row(row) and check_column(column) and check_empty(row, column):
+            return [row, column]
     else:
-        print("Ошибка ввода")
+        print("Ошибка ввода, введите правильные данные")
         return False
 
 
-def player_turn():
-    input_dot_turn(input("Сделайте ход (формат 1а-Х): "))
+def player_turn(current_player):
+    input_dot_turn(input(f"Ходят - {current_player} (формат: 1а): "), current_player)
     print_game_field()
 
 
-def input_dot_turn(dot_input):
+def input_dot_turn(dot_input, current_player):
     if check_input(dot_input):
-        row, column, value = check_input(dot_input)
-        game_field[row][column] = value
+        row, column = check_input(dot_input)
+        game_field[row][column] = current_player
     else:
         player_turn()
 
@@ -96,12 +132,30 @@ def print_game_field():
     print("\n")
 
 
+def check_empty_symbols():
+    empty_symbols = 0
+    for dat in game_field.values():
+        for d in dat.values():
+            if d == empty_dot:
+                empty_symbols += 1
+    return empty_symbols
+
+
 def run_game():
     print("Игра крестики-нолики")
     print_game_field()
-
+    current_player = "X"
+    while check_win():
+        if check_empty_symbols() != 0:
+            player_turn(current_player)
+            check_win()
+        else:
+            print("Ничья")
+            break
+        if current_player == "X":
+            current_player = "O"
+        else:
+            current_player = "X"
+    print("Игра окончена.")
 
 run_game()
-# game_field["1"]["a"] = "X"
-player_turn()
-player_turn()
