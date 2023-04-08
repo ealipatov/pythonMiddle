@@ -1,3 +1,5 @@
+from random import randint
+
 empty_dot = "●"
 row_1 = "1"
 row_2 = "2"
@@ -73,15 +75,6 @@ def check_empty(row, column):
         return False
 
 
-# def check_symbol(value):
-#     allow_symbol = ["X", "O"]
-#     if value in allow_symbol:
-#         return True
-#     else:
-#         print(f"Выбран неверный символ: {value}, допустимые символы {allow_symbol} повторите ввод")
-#         return False
-
-
 def check_row(row):
     allow_row = [row_1, row_2, row_3]
     if row in allow_row:
@@ -112,6 +105,13 @@ def check_input(dot_input):
         return False
 
 
+def computer_turn():
+    computer_player = "O"
+    allow_row = [row_1, row_2, row_3]
+    allow_column = [col_A, col_B, col_C]
+    input_dot_turn(allow_row[randint(0, 2)] + allow_column[randint(0, 2)], computer_player)
+# доработать выбор хода компьютером
+
 def player_turn(current_player):
     input_dot_turn(input(f"Ходят - {current_player} (формат: 1а): "), current_player)
     print_game_field()
@@ -122,7 +122,10 @@ def input_dot_turn(dot_input, current_player):
         row, column = check_input(dot_input)
         game_field[row][column] = current_player
     else:
-        player_turn()
+        if current_player == "X":
+            player_turn(current_player)
+        else:
+            computer_turn()
 
 
 def print_game_field():
@@ -158,4 +161,22 @@ def run_game():
             current_player = "X"
     print("Игра окончена.")
 
+
+def run_game_with_computer():
+    print("Игра крестики-нолики")
+    print_game_field()
+    current_player = "X"
+    while check_win():
+        if check_empty_symbols() != 0:
+            player_turn(current_player)
+            check_win()
+            computer_turn()
+            check_win()
+        else:
+            print("Ничья")
+            break
+    print("Игра окончена.")
+
+
 run_game()
+# run_game_with_computer()
