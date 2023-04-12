@@ -27,6 +27,26 @@ game_field = {
 }
 
 
+def init_game_field():
+    game_field[row_1] = {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
+    }
+
+    game_field[row_2] = {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
+    }
+
+    game_field[row_3] = {
+        col_A: empty_dot,
+        col_B: empty_dot,
+        col_C: empty_dot
+    }
+
+
 def check_win():
     # Проверка по строкам
     if (game_field[row_1][col_A] == game_field[row_1][col_B]) and (
@@ -88,19 +108,19 @@ def check_input(dot_input, current_player):
         row = dot_input[0].lower()
 
         if not check_empty(row, column):
-            return f"Выбранная ячейка {game_field[row][column]} занята, повторите ввод"
+            return f"Выбранная ячейка {game_field[row][column]} занята, переход хода"
 
         if not check_row(row):
             return f"Строки {row} нет, повторите ввод"
 
         if not check_column(column):
-            return f"Колонки {column} нет, допустимые колонки {column}, повторите ввод"
+            return f"Колонки {column} нет, допустимые колонки {column}, переход хода"
 
         if check_row(row) and check_column(column) and check_empty(row, column):
             game_field[row][column] = current_player
             return f"{current_player} сделали ход в ячейку {row + column}"
     else:
-        return "Ввод данных не верный."
+        return "Ввод данных не верный, переход хода."
 
 
 def print_game_field():
@@ -119,4 +139,3 @@ def check_empty_symbols():
             if d == empty_dot:
                 empty_symbols += 1
     return empty_symbols
-

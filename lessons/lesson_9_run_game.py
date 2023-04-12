@@ -9,6 +9,7 @@ current_player = ['X']
 
 @bot.message_handler(commands=['start'])
 def run_game(message):
+    lesson_9_game_logic.init_game_field()
     bot.send_message(message.chat.id, f'Игра крестики-нолики началась')
     bot.send_message(message.chat.id, lesson_9_game_logic.print_game_field())
     bot.send_message(message.chat.id, f'Ходят {current_player[0]}')
@@ -17,18 +18,20 @@ def run_game(message):
 @bot.message_handler(content_types=['text'])
 def turn(message):
     if lesson_9_game_logic.check_win() == lesson_9_game_logic.game_status:
+        # bot.send_message(message.chat.id, f'Ходят {current_player[0]}')
         if lesson_9_game_logic.check_empty_symbols() != 0:
             bot.send_message(message.chat.id, lesson_9_game_logic.check_input(message.text, current_player[0]))
             bot.send_message(message.chat.id, lesson_9_game_logic.print_game_field())
             bot.send_message(message.chat.id, lesson_9_game_logic.check_win())
+
+            if current_player[0] == "X":
+                current_player[0] = "O"
+            else:
+                current_player[0] = "X"
+            if lesson_9_game_logic.check_win() == lesson_9_game_logic.game_status:
+                bot.send_message(message.chat.id, f'Ходят {current_player[0]}')
         else:
             bot.send_message(message.chat.id, "Ничья")
-        if current_player[0] == "X":
-            current_player[0] = "O"
-        else:
-            current_player[0] = "X"
-        if lesson_9_game_logic.check_empty_symbols() != 0:
-            bot.send_message(message.chat.id, f'Ходят {current_player[0]}')
     else:
         bot.send_message(message.chat.id, "Игра окончена.")
 
