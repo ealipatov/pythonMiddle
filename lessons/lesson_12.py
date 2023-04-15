@@ -1,6 +1,6 @@
 import os.path
 
-INFO_FILE_TXT = "info.txt"
+INFO_FILE_TXT = "test_files/info.txt"
 
 
 def create_file(file_name):
