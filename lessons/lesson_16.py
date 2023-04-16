@@ -1,5 +1,13 @@
 import xlsxwriter
+import datetime
 
+
+date_now = datetime.datetime.now()
+print(date_now)
+print(f"часов: {date_now.hour}")
+print(f"минут: {date_now.minute}")
+print(f"день: {date_now.day}")
+print(f"год: {date_now.year}")
 
 workbook = xlsxwriter.Workbook('test_files/test_exel.xlsx')
 worksheet = workbook.add_worksheet()
