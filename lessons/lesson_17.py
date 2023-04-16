@@ -1,11 +1,12 @@
 import random
-
 import xlsxwriter
 import datetime
+import pandas
+import os.path
 
 ADMIN_ACCESS = "admin_access"
 STUDENT_ACCESS = "student_access"
-
+DATA_FILE = "test_files/students_mark.xlsx"
 date_now = datetime.datetime.now()
 
 users = {
@@ -63,7 +64,7 @@ def check_user_authentication():
 
 
 def save_data():
-    workbook = xlsxwriter.Workbook('test_files/students_mark.xlsx')
+    workbook = xlsxwriter.Workbook(DATA_FILE)
     bold = workbook.add_format({"bold": True})
 
     for user, marks in users_mark.items():
@@ -73,11 +74,21 @@ def save_data():
         worksheet.write("B1", "Оценка", bold)
 
         for mark in marks:
-            worksheet.write(f"A{counter}", str(mark[0])[:10])
+            worksheet.write(f"A{counter}", str(mark[0])[:16])
             worksheet.write(f"B{counter}", mark[1])
             counter += 1
 
     workbook.close()
+
+
+def load_data():
+    if os.path.exists(DATA_FILE):
+        xlsx_data = pandas.ExcelFile(DATA_FILE)
+        for sheet in xlsx_data.sheet_names:
+            user_date = pandas.read_excel(xlsx_data, sheet)
+            marks = user_date.values.tolist()
+            users_mark[sheet] = list(
+                map(lambda el: (datetime.datetime.strptime(el[0], "%Y-%m-%d %H:%M"), el[1]), marks))
 
 
 def start_test(login):
@@ -116,23 +127,26 @@ def show_menu(user_access, login):
             print(f"{item}", current_menu[item])
         print("=" * 80)
 
-        chosen_item = int(input("Выберете пункт меню: "))
-        if user_access == STUDENT_ACCESS and chosen_item == 1:
-            start_test(login)
-        elif user_access == STUDENT_ACCESS and chosen_item == 2:
-            pass
-        elif user_access == ADMIN_ACCESS and chosen_item == 1:
-            pass
-        elif user_access == ADMIN_ACCESS and chosen_item == 2:
-            pass
-        elif chosen_item == 10:
-            if user_access == STUDENT_ACCESS:
-                save_data()
-                print("данные сохранены")
-            print("Работы программы завершена.")
-            return
-        else:
-            print("Выбран некорректный пункт меню")
+        try:
+            chosen_item = int(input("Выберете пункт меню: "))
+            if user_access == STUDENT_ACCESS and chosen_item == 1:
+                start_test(login)
+            elif user_access == STUDENT_ACCESS and chosen_item == 2:
+                pass
+            elif user_access == ADMIN_ACCESS and chosen_item == 1:
+                pass
+            elif user_access == ADMIN_ACCESS and chosen_item == 2:
+                pass
+            elif chosen_item == 10:
+                if user_access == STUDENT_ACCESS:
+                    save_data()
+                    print("данные сохранены")
+                print("Работы программы завершена.")
+                return
+            else:
+                print("Выбран некорректный пункт меню")
+        except Exception as error:
+            print(error)
 
 
 def run_program():
@@ -150,4 +164,5 @@ def generate_test():
     return question, eval(question)
 
 
+load_data()
 run_program()
