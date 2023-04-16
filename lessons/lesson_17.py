@@ -15,13 +15,7 @@ users = {
     "витя": ("12345", STUDENT_ACCESS)
 }
 
-users_mark = {
-    "иван": [
-        (date_now - datetime.timedelta(days=1), 9),
-        (date_now - datetime.timedelta(days=3), 8),
-        (date_now - datetime.timedelta(days=5), 7)
-    ]
-}
+users_mark = {}
 
 MENU = {
     ADMIN_ACCESS: {
@@ -79,7 +73,7 @@ def save_data():
         worksheet.write("B1", "Оценка", bold)
 
         for mark in marks:
-            worksheet.write(f"A{counter}", str(mark[0])[:10] )
+            worksheet.write(f"A{counter}", str(mark[0])[:10])
             worksheet.write(f"B{counter}", mark[1])
             counter += 1
 
@@ -98,6 +92,7 @@ def start_test(login):
             else:
                 print(f"Ошибка. Правильный ответ: {answer}")
         except Exception as error:
+            print(error)
             print(" Ошибка. Введенный ответ не целое число")
     mark = right_answer * 2
     users_mark[login] = users_mark.get(login, []) + [(date_now, mark)]
@@ -115,7 +110,12 @@ def print_dist(dist):
 def show_menu(user_access, login):
     while True:
         current_menu = MENU[user_access]
-        print(f"Меню пользователя {login}: {current_menu}")
+        print(f"\nМеню пользователя: ")
+        print("=" * 80)
+        for item in current_menu:
+            print(f"{item}", current_menu[item])
+        print("=" * 80)
+
         chosen_item = int(input("Выберете пункт меню: "))
         if user_access == STUDENT_ACCESS and chosen_item == 1:
             start_test(login)
@@ -151,4 +151,3 @@ def generate_test():
 
 
 run_program()
-# print_dist(users_mark)
