@@ -20,8 +20,8 @@ users_mark = {}
 
 MENU = {
     ADMIN_ACCESS: {
-        1: "Просмотр статистики по предмету",
-        2: "Просмотр статистики по дате",
+        1: "Средний балл по всем пользователям",
+        2: "Все отметки по пользователю",
         10: "Выход"
     },
     STUDENT_ACCESS: {
@@ -118,6 +118,34 @@ def print_dist(dist):
             print(i)
 
 
+def show_users_info():
+    user_name = input("Введите имя ученика: ").lower()
+    if user_name in users_mark.keys():
+        marks = users_mark[user_name]
+        for mark in marks:
+            print(f"Отметка: {mark[1]} получена -> {mark[0]}")
+    else:
+        print(f"Пользователя с именем {user_name} нет в списке")
+
+
+def show_average_info():
+    counter = 1
+    marks_sum = 0
+    marks_count = 0
+    print("\nСредний бал по пользователям: ")
+    print("=" * 80)
+    for name, marks in users_mark.items():
+        int_marks = list(map(lambda el: el[1], marks))
+        print(f"{counter}. {name}: {sum(int_marks) / len(int_marks)}")
+        counter += 1
+        for mark in marks:
+            marks_sum += mark[1]
+            marks_count += 1
+    print("=" * 80)
+    print(f"Средний бал по всем пользователям: {round(marks_sum / marks_count, 2)}")
+    print("=" * 80)
+
+
 def show_menu(user_access, login):
     while True:
         current_menu = MENU[user_access]
@@ -134,9 +162,9 @@ def show_menu(user_access, login):
             elif user_access == STUDENT_ACCESS and chosen_item == 2:
                 pass
             elif user_access == ADMIN_ACCESS and chosen_item == 1:
-                pass
+                show_average_info()
             elif user_access == ADMIN_ACCESS and chosen_item == 2:
-                pass
+                show_users_info()
             elif chosen_item == 10:
                 if user_access == STUDENT_ACCESS:
                     save_data()
