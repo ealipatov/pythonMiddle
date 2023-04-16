@@ -21,3 +21,6 @@ print(numbers_2)
 
 # Использование функции sorted
 print(sorted(numbers_3, reverse=True))
+
+# Используем map
+print(list(map(lambda number: number + 1, numbers)))
