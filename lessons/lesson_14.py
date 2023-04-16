@@ -5,7 +5,8 @@ def get_from_numbers(index):
     try:
         return numbers[index]
     except Exception as e:
+        print(e)
         return 0
 
 
-print (get_from_numbers(0))
+print(get_from_numbers(4))
