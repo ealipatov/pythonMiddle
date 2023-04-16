@@ -24,3 +24,10 @@ print(sorted(numbers_3, reverse=True))
 
 # Используем map
 print(list(map(lambda number: number + 1, numbers)))
+print(list(map(lambda number: f"{number} aaa", numbers)))
+
+# Используем lazy eval
+
+numbers_4 = list(filter(lambda element: element % 10 == 0, numbers_2))
+numbers_5 = list(filter(lambda element: element % 5 == 0, numbers_4))
+print(numbers_5)
