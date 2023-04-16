@@ -18,3 +18,6 @@ print(numbers)
 numbers_2 = list(filter(lambda element: element % 2 == 0, numbers))
 numbers_3 = list(filter(filter_function, numbers))
 print(numbers_2)
+
+# Использование функции sorted
+print(sorted(numbers_3, reverse=True))
